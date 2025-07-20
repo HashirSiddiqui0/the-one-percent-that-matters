@@ -1,0 +1,44 @@
+{
+  "name": "the-one-percent-that-matters",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "analyze": "ANALYZE=true npm run build",
+    "export": "next export",
+    "clean": "rm -rf .next out",
+    "prebuild": "npm run clean"
+  },
+  "dependencies": {
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "autoprefixer": "^10.4.16",
+    "clsx": "^2.0.0",
+    "firebase": "^10.7.1",
+    "framer-motion": "^10.16.16",
+    "lottie-react": "^2.4.0",
+    "next": "14.0.4",
+    "postcss": "^8.4.32",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.12.0",
+    "react-intersection-observer": "^9.5.3",
+    "tailwind-merge": "^2.2.0",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "critters": "^0.0.23",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.0.4"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}

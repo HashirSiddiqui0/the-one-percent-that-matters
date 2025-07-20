@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Enhanced smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  overscroll-behavior: none;
+  scroll-snap-type: y proximity;
+}
+
+/* Ultra-Smooth GPU-Accelerated Parallax Elements */
+.parallax-element {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: layout style paint;
+  isolation: isolate;
+  content-visibility: auto;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* Enhanced button styles with proper colors */
+.btn-primary {
+  @apply bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg;
+}
+
+.btn-secondary {
+  @apply border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105;
+}
+
+/* Enhanced link styles */
+.link-highlight {
+  @apply hover:text-blue-400 transition-colors duration-300;
+}
+
+.gradient-text {
+  @apply bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent;
+}
+
+/* Performance optimization classes */
+.smooth-scroll {
+  scroll-behavior: smooth;
+  overflow-y: auto;
+  overscroll-behavior: none;
+}
+
+.momentum-scroll {
+  scroll-behavior: auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.parallax-layer {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  contain: layout style paint;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.gpu-optimized {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  contain: layout style paint;
+}
+
+.smooth-text {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.viewport-optimized {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 800px;
+}
+
+/* Enhanced performance for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .parallax-element,
+  .gpu-optimized {
+    will-change: auto;
+    transform: none;
+  }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ef4444, #dc2626);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #dc2626, #b91c1c);
+}
+
+/* Dark theme overrides */
+.dark {
+  color-scheme: dark;
+}
+
+/* Enhanced focus states for accessibility */
+.focus-visible:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Anti-aliasing for crisp text */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+} 
