@@ -1,98 +1,86 @@
+import { useRef, useEffect, useState } from 'react'
 import { useScroll, useSpring, useTransform, MotionValue } from 'framer-motion'
-import { RefObject, useEffect, useState, useRef } from 'react'
+import { useInView } from 'react-intersection-observer'
 
-interface ParallaxConfig {
+interface ParallaxOptions {
   speed?: number
   damping?: number
   stiffness?: number
-  range?: [number, number]
-  output?: [string, string]
   smooth?: boolean
   threshold?: number
+  rootMargin?: string
 }
 
-interface AdvancedParallaxHook {
-  scrollY: MotionValue<number>
+interface ParallaxResult {
   parallaxY: MotionValue<string>
   progress: MotionValue<number>
-  isInView: boolean
   velocity: MotionValue<number>
+  isInView: boolean
 }
 
 export const useAdvancedParallax = (
-  ref: RefObject<HTMLElement>,
-  config: ParallaxConfig = {}
-): AdvancedParallaxHook => {
+  ref: React.RefObject<HTMLElement>,
+  options: ParallaxOptions = {}
+): ParallaxResult => {
   const {
     speed = 0.5,
-    damping = 50,
-    stiffness = 400,
-    range = [0, 1],
-    output = ['0%', `${speed * 100}%`],
+    damping = 20,
+    stiffness = 100,
     smooth = true,
-    threshold = 0.1
-  } = config
+    threshold = 0,
+    rootMargin = "-20% 0px -20% 0px"
+  } = options
 
-  const [isInView, setIsInView] = useState(false)
-  const intersectionRef = useRef<IntersectionObserver>()
+  // Intersection observer for optimized performance
+  const [inViewRef, isInView] = useInView({
+    threshold,
+    rootMargin,
+    triggerOnce: false
+  })
 
-  // Enhanced scroll tracking with velocity
+  // Combine refs
+  useEffect(() => {
+    if (ref.current) {
+      inViewRef(ref.current)
+    }
+  }, [ref, inViewRef])
+
+  // Scroll progress and velocity
   const { scrollYProgress, scrollY } = useScroll({
     target: ref,
     offset: ["start end", "end start"]
   })
 
-  // Smooth parallax with spring physics
-  const smoothProgress = smooth 
-    ? useSpring(scrollYProgress, { damping, stiffness })
-    : scrollYProgress
+  // Smooth progress with spring physics
+  const smoothProgress = useSpring(scrollYProgress, {
+    damping,
+    stiffness,
+    mass: 0.1,
+    restDelta: 0.001
+  })
 
-  // Ultra-smooth parallax transformation with refined easing
-  const parallaxY = useTransform(
-    smoothProgress,
-    range,
-    output,
-    {
-      ease: (t: number) => {
-        // Refined easing for silky smooth parallax
-        return t < 0.5 
-          ? 16 * t * t * t * t * t 
-          : 1 - Math.pow(-2 * t + 2, 5) / 2
-      }
-    }
-  )
-
-  // Scroll velocity for momentum effects
+  // Calculate velocity from scrollY
   const velocity = useTransform(scrollY, (latest) => scrollY.getVelocity())
 
-  // Intersection Observer for performance optimization
-  useEffect(() => {
-    if (!ref.current) return
+  // Smooth velocity with spring physics
+  const smoothVelocity = useSpring(velocity, {
+    damping: damping * 2,
+    stiffness: stiffness * 2,
+    mass: 0.1,
+    restDelta: 0.001
+  })
 
-    intersectionRef.current = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting || entry.intersectionRatio > threshold)
-      },
-      {
-        threshold,
-        rootMargin: '50px'
-      }
-    )
-
-    intersectionRef.current.observe(ref.current)
-
-    return () => {
-      if (intersectionRef.current) {
-        intersectionRef.current.disconnect()
-      }
-    }
-  }, [ref, threshold])
+  // Transform progress into parallax Y position
+  const parallaxY = useTransform(
+    smooth ? smoothProgress : scrollYProgress,
+    [0, 1],
+    [`${speed * 100}%`, `${-speed * 100}%`]
+  )
 
   return {
-    scrollY,
     parallaxY,
-    progress: smoothProgress,
-    isInView,
-    velocity
+    progress: smooth ? smoothProgress : scrollYProgress,
+    velocity: smooth ? smoothVelocity : velocity,
+    isInView
   }
 }

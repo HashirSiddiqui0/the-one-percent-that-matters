@@ -92,6 +92,12 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: false,
   },
+  
+  // Experimental features
+  experimental: {
+    optimizeCss: true,
+    scrollRestoration: true
+  }
 }
 
 module.exports = nextConfig 
