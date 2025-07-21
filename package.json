@@ -6,12 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "type-check": "tsc --noEmit",
-    "analyze": "ANALYZE=true npm run build",
-    "export": "next export",
-    "clean": "rm -rf .next out",
-    "prebuild": "npm run clean"
+    "lint": "next lint"
   },
   "dependencies": {
     "@types/node": "^20.10.5",
@@ -36,9 +31,5 @@
     "critters": "^0.0.23",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.0.4"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
   }
 }

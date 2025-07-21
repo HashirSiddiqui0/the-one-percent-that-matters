@@ -21,11 +21,6 @@ export const ANIMATION_VARIANTS = {
     animate: { opacity: 1 },
     exit: { opacity: 0 }
   },
-  fadeInUp: {
-    initial: { opacity: 0, y: 30 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -30 }
-  },
   slideUp: {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
@@ -45,28 +40,8 @@ export const ANIMATION_VARIANTS = {
     initial: { opacity: 0, x: 30 },
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -30 }
-  },
-  fadeInDown: {
-    initial: { opacity: 0, y: -30 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: 30 }
-  },
-  zoomIn: {
-    initial: { opacity: 0, scale: 0.8 },
-    animate: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.8 }
   }
 }
-
-// Individual exports for backward compatibility
-export const fadeInUp = ANIMATION_VARIANTS.fadeInUp
-export const fadeIn = ANIMATION_VARIANTS.fadeIn
-export const slideUp = ANIMATION_VARIANTS.slideUp
-export const scaleIn = ANIMATION_VARIANTS.scaleIn
-export const slideInLeft = ANIMATION_VARIANTS.slideInLeft
-export const slideInRight = ANIMATION_VARIANTS.slideInRight
-export const fadeInDown = ANIMATION_VARIANTS.fadeInDown
-export const zoomIn = ANIMATION_VARIANTS.zoomIn
 
 export const staggerContainer = {
   animate: {
