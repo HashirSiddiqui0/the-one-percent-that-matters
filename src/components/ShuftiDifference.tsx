@@ -41,7 +41,6 @@ interface DeploymentStats {
 }
 
 const ShuftiDifference: React.FC = () => {
-  const sectionRef = useRef(null)
   const [activeSolution, setActiveSolution] = useState(0)
   const [deploymentPhase, setDeploymentPhase] = useState<'locked' | 'unlocking' | 'revealed'>('locked')
   const [isDeploying, setIsDeploying] = useState(false)
@@ -50,12 +49,13 @@ const ShuftiDifference: React.FC = () => {
     parallaxY: baseParallax,
     progress,
     velocity,
-    isInView
-  } = useAdvancedParallax(sectionRef, {
+    isInView,
+    ref: sectionRef
+  } = useAdvancedParallax({
     speed: 0.6, // Ultra-smooth speed for silky motion
     damping: 15, // Ultra-low damping for buttery smooth movement
     stiffness: 120, // Reduced stiffness for fluid motion
-    smooth: true
+    smooth: true // Enable smooth interpolation
   })
 
   // Ultra-smooth transforms with refined curves

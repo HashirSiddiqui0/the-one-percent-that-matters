@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postbuild": "next-sitemap --config next-sitemap.config.js",
+    "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
     "@types/node": "^20.10.5",
@@ -28,8 +30,13 @@
     "typescript": "^5.3.3"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^14.2.30",
     "critters": "^0.0.23",
     "eslint": "^8.56.0",
-    "eslint-config-next": "14.0.4"
+    "eslint-config-next": "14.0.4",
+    "next-sitemap": "^4.2.3"
+  },
+  "engines": {
+    "node": ">=18.17.0"
   }
 }

@@ -80,7 +80,6 @@ const itemVariants = {
 }
 
 const ComparisonSplit: React.FC = () => {
-  const sectionRef = useRef(null)
   const [activeComparison, setActiveComparison] = useState(0)
   const [revealPhase, setRevealPhase] = useState<'coverup' | 'revelation'>('coverup')
   const [isAutoPlay, setIsAutoPlay] = useState(true)
@@ -92,8 +91,9 @@ const ComparisonSplit: React.FC = () => {
     parallaxY: baseParallax,
     progress,
     velocity,
-    isInView
-  } = useAdvancedParallax(sectionRef, {
+    isInView,
+    ref: sectionRef
+  } = useAdvancedParallax({
     speed: 0.15, // Reduced for better performance
     damping: 40,
     stiffness: 180,

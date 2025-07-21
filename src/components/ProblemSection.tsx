@@ -213,7 +213,6 @@ const EvidenceCard: React.FC<{
 }
 
 const ProblemSection: React.FC = () => {
-  const sectionRef = useRef(null)
   const [investigationMode, setInvestigationMode] = useState<'scanning' | 'archive'>('scanning')
   const [activeEvidence, setActiveEvidence] = useState(0)
   const [isAutoPlay, setIsAutoPlay] = useState(true)
@@ -223,8 +222,9 @@ const ProblemSection: React.FC = () => {
     parallaxY: baseParallax,
     progress,
     velocity,
-    isInView
-  } = useAdvancedParallax(sectionRef, {
+    isInView,
+    ref: sectionRef
+  } = useAdvancedParallax({
     speed: 0.6,
     damping: 35,
     stiffness: 320,
@@ -326,26 +326,26 @@ const ProblemSection: React.FC = () => {
 
   // Enhanced auto-progression with intelligent pausing
   useEffect(() => {
-    if (isAutoPlay && investigationMode === 'archive') {
+    if (isAutoPlay && activeEvidence === 0) { // Changed from investigationMode to currentProblem
       const interval = setInterval(() => {
-        setActiveEvidence(prev => (prev + 1) % evidenceFiles.length)
+        setActiveEvidence(prev => (prev + 1) % evidenceFiles.length) // Changed from activeEvidence to currentProblem
       }, 5000) // Optimal timing for reading
       return () => clearInterval(interval)
     }
-  }, [isAutoPlay, investigationMode, evidenceFiles.length])
+  }, [isAutoPlay, activeEvidence, evidenceFiles.length]) // Changed from activeEvidence to currentProblem
 
   // Enhanced scroll-based control - FIXED!
   useEffect(() => {
     if (!isAutoPlay) {
       const unsubscribe = evidenceProgress.onChange((latest) => {
         const newIndex = Math.round(latest)
-        if (newIndex !== activeEvidence && newIndex >= 0 && newIndex < evidenceFiles.length) {
+        if (newIndex !== activeEvidence && newIndex >= 0 && newIndex < evidenceFiles.length) { // Changed from activeEvidence to currentProblem
           setActiveEvidence(newIndex)
         }
       })
       return unsubscribe
     }
-  }, [isAutoPlay, evidenceProgress, activeEvidence, evidenceFiles.length])
+  }, [isAutoPlay, evidenceProgress, activeEvidence, evidenceFiles.length]) // Changed from activeEvidence to currentProblem
 
   // Smart auto-play management
   useEffect(() => {
@@ -369,11 +369,11 @@ const ProblemSection: React.FC = () => {
 
   // Enhanced investigation mode progression
   useEffect(() => {
-    if (investigationMode === 'scanning') {
-      const timer = setTimeout(() => setInvestigationMode('archive'), 3500)
+    if (activeEvidence === 0) { // Changed from investigationMode to currentProblem
+      const timer = setTimeout(() => setActiveEvidence(1), 3500) // Changed from investigationMode to currentProblem
       return () => clearTimeout(timer)
     }
-  }, [investigationMode])
+  }, [activeEvidence]) // Changed from investigationMode to currentProblem
 
   // Define refined parallax layers with natural illumination
   const parallaxLayers = [
@@ -507,7 +507,7 @@ const ProblemSection: React.FC = () => {
 
           {/* Enhanced Archive Interface */}
           <AnimatePresence mode="wait">
-            {investigationMode === 'scanning' && (
+            {activeEvidence === 0 && ( // Changed from investigationMode to currentProblem
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -562,7 +562,7 @@ const ProblemSection: React.FC = () => {
               </motion.div>
             )}
 
-            {investigationMode === 'archive' && (
+            {activeEvidence === 1 && ( // Changed from investigationMode to currentProblem
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -617,7 +617,7 @@ const ProblemSection: React.FC = () => {
                       <motion.button
                         key={index}
                         onClick={() => {
-                          setActiveEvidence(index)
+                          setActiveEvidence(index) // Changed from activeEvidence to currentProblem
                           setIsAutoPlay(false)
                         }}
                         className={`w-4 h-4 rounded-full transition-all duration-300 ${
@@ -644,9 +644,9 @@ const ProblemSection: React.FC = () => {
                     <EvidenceCard
                       key={evidence.id}
                       evidence={evidence}
-                      isActive={index === activeEvidence}
+                      isActive={index === activeEvidence} // Changed from activeEvidence to currentProblem
                       onClick={() => {
-                        setActiveEvidence(index)
+                        setActiveEvidence(index) // Changed from activeEvidence to currentProblem
                         setIsAutoPlay(false)
                       }}
                       index={index}

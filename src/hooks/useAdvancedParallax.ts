@@ -1,6 +1,7 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect } from 'react'
 import { useScroll, useSpring, useTransform, MotionValue } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
+import { EASING } from '@/lib/utils'
 
 interface ParallaxOptions {
   speed?: number
@@ -16,12 +17,10 @@ interface ParallaxResult {
   progress: MotionValue<number>
   velocity: MotionValue<number>
   isInView: boolean
+  ref: (node?: Element | null) => void
 }
 
-export const useAdvancedParallax = (
-  ref: React.RefObject<HTMLElement>,
-  options: ParallaxOptions = {}
-): ParallaxResult => {
+export const useAdvancedParallax = (options: ParallaxOptions = {}): ParallaxResult => {
   const {
     speed = 0.5,
     damping = 20,
@@ -31,56 +30,59 @@ export const useAdvancedParallax = (
     rootMargin = "-20% 0px -20% 0px"
   } = options
 
-  // Intersection observer for optimized performance
-  const [inViewRef, isInView] = useInView({
+  const elementRef = useRef<Element | null>(null)
+  const [ref, inView] = useInView({
     threshold,
-    rootMargin,
-    triggerOnce: false
+    rootMargin
   })
 
-  // Combine refs
+  // Update elementRef when inView ref changes
   useEffect(() => {
-    if (ref.current) {
-      inViewRef(ref.current)
+    return () => {
+      const callback = (node?: Element | null) => {
+        elementRef.current = node || null
+        return ref(node)
+      }
+      callback(elementRef.current)
     }
-  }, [ref, inViewRef])
+  }, [ref])
 
-  // Scroll progress and velocity
-  const { scrollYProgress, scrollY } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  })
-
-  // Smooth progress with spring physics
-  const smoothProgress = useSpring(scrollYProgress, {
+  const { scrollY } = useScroll()
+  
+  const springConfig = {
     damping,
     stiffness,
-    mass: 0.1,
-    restDelta: 0.001
-  })
+    mass: 1
+  }
 
-  // Calculate velocity from scrollY
-  const velocity = useTransform(scrollY, (latest) => scrollY.getVelocity())
+  // Create smooth parallax effect
+  const y = useTransform(scrollY, [0, 1000], [0, 500 * speed])
+  const parallaxY = useSpring(smooth ? y : scrollY, springConfig)
 
-  // Smooth velocity with spring physics
-  const smoothVelocity = useSpring(velocity, {
-    damping: damping * 2,
-    stiffness: stiffness * 2,
-    mass: 0.1,
-    restDelta: 0.001
-  })
-
-  // Transform progress into parallax Y position
-  const parallaxY = useTransform(
-    smooth ? smoothProgress : scrollYProgress,
-    [0, 1],
-    [`${speed * 100}%`, `${-speed * 100}%`]
+  // Track progress for animations
+  const progress = useTransform(scrollY, 
+    (value) => {
+      const element = elementRef.current
+      if (!element) return 0
+      const rect = element.getBoundingClientRect()
+      const windowHeight = window.innerHeight
+      const offsetTop = rect.top + value
+      const total = windowHeight + rect.height
+      return Math.max(0, Math.min(1, (value - offsetTop + windowHeight) / total))
+    }
   )
 
+  // Track velocity for dynamic effects
+  const velocity = useSpring(useTransform(scrollY, [0, 1], [0, 1]), {
+    damping: 50,
+    stiffness: 400
+  })
+
   return {
-    parallaxY,
-    progress: smooth ? smoothProgress : scrollYProgress,
-    velocity: smooth ? smoothVelocity : velocity,
-    isInView
+    parallaxY: useTransform(parallaxY, (value) => `${value}px`),
+    progress,
+    velocity,
+    isInView: inView,
+    ref
   }
 }

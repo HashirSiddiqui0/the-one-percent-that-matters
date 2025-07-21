@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef, useState, useCallback, useMemo } from 'react'
-import { cn, fadeInUp } from '@/lib/utils'
+import { cn, ANIMATION_VARIANTS } from '@/lib/utils'
 import { 
   FiMail, 
   FiPhone, 
@@ -270,7 +270,9 @@ const FinalCTA: React.FC = () => {
         {/* Main CTA Section */}
         <motion.div 
           className="text-center mb-12 sm:mb-16"
-          {...fadeInUp}
+          initial={ANIMATION_VARIANTS.fadeInUp.initial}
+          animate={ANIMATION_VARIANTS.fadeInUp.animate}
+          exit={ANIMATION_VARIANTS.fadeInUp.exit}
           transition={{ delay: 0.4 }}
         >
           <div className="bg-gradient-to-r from-primary-500/10 to-accent-500/10 border border-primary-500/20 rounded-2xl p-6 sm:p-8 md:p-12 max-w-4xl mx-auto">

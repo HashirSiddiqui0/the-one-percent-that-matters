@@ -150,20 +150,18 @@ DocumentCard.displayName = 'DocumentCard'
 
 // Simplified background pattern
 const BACKGROUND_PATTERN = {
-  backgroundImage: `
-    repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0%, transparent 2%, rgba(255,255,255,0.01) 4%)
-  `,
+  backgroundImage: `repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0%, transparent 2%, rgba(255,255,255,0.01) 4%)`,
   backgroundSize: '50px 50px',
   willChange: 'transform',
   transform: 'translateZ(0)'
-}
+} as const
 
 // GPU-accelerated styles
 const GPU_ACCELERATED_STYLES = {
   transform: 'translateZ(0)',
   willChange: 'transform, opacity',
-  backfaceVisibility: 'hidden' as const
-}
+  backfaceVisibility: 'hidden'
+} as const
 
 // Main HeroSection component with optimized performance
 const HeroSection: React.FC = memo(() => {

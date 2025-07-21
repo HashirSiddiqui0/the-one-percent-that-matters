@@ -1,3 +1,7 @@
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Core performance optimizations
@@ -30,20 +34,15 @@ const nextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
+            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
           },
           {
-            key: 'Cache-Control',
-            value: 'no-store, must-revalidate',
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains',
           },
-        ],
-      },
-      {
-        source: '/sp-white-Logo.webp',
-        headers: [
           {
-            key: 'Cache-Control',
-            value: 'public, max-age=86400, immutable',
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
           },
         ],
       },
@@ -96,8 +95,8 @@ const nextConfig = {
   // Experimental features
   experimental: {
     optimizeCss: true,
-    scrollRestoration: true
-  }
+    scrollRestoration: true,
+  },
 }
 
-module.exports = nextConfig 
+module.exports = withBundleAnalyzer(nextConfig) 

@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef, useState } from 'react'
-import { cn, fadeInUp } from '@/lib/utils'
+import { cn, ANIMATION_VARIANTS } from '@/lib/utils'
 import { 
   FiFileText, 
   FiDownload, 
@@ -11,7 +11,9 @@ import {
   FiTrendingUp,
   FiGlobe,
   FiArrowRight,
-  FiChevronRight
+  FiChevronRight,
+  FiCheck,
+  FiStar
 } from 'react-icons/fi'
 
 interface WhitepaperCardProps {
